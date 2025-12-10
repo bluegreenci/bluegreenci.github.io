@@ -148,7 +148,7 @@
   }
 
   .disable-transitions * {
-    @apply transition-none !;
+    transition: none;
   }
 
   /* Enhanced focus indicators for accessibility */
