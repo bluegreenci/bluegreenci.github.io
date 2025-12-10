@@ -42,10 +42,10 @@ export const BREVO = {
 }
 
 export const NAV_LINKS: SocialLink[] = [
-  // {
-  //   href: '/blog',
-  //   label: 'All Articles',
-  // },
+  {
+    href: 'https://aziflaj.github.io/tags/runbook-notes/',
+    label: 'Previous Dev Notes',
+  },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [
