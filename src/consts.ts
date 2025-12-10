@@ -1,14 +1,14 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
-  title: 'BlueGreenCI Blog',
+  title: 'BlueGreen Chronicles',
   description:
-    'A brief description of your blog. This will be used in meta tags and social sharing.',
-  href: 'https://bluegreen.ci.com',
+    'Blogs, tutorials, and materials for BlueGreen.',
+  href: 'https://bluegreen.ci',
   author: 'aziflaj',
   locale: 'en-US',
-  featuredPostCount: 2,
-  postsPerPage: 6,
+  featuredPostCount: 3,
+  postsPerPage: 10,
 }
 
 // Google Analytics
