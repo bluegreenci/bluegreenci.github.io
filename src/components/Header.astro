@@ -1,8 +1,8 @@
 ---
 import Link from '@/components/Link.astro'
+import SearchButton from '@/components/react/SearchButton'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 import MobileMenu from '@/components/ui/mobile-menu'
-import SearchButton from '@/components/react/SearchButton'
 import { NAV_LINKS } from '@/consts'
 import { Icon } from 'astro-icon/components'
 
@@ -11,58 +11,60 @@ const isExternalLink = (href: string) => {
 }
 ---
 
-<header class="bg-background/50 sticky top-0 z-10 backdrop-blur-md" transition:persist>
-  <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 p-4">
-    <Link href="/" class="flex shrink-0 items-center gap-2 text-xl font-medium" data-astro-reload>
-      <img 
-        src="/static/logo.svg" 
-        alt="Logo" 
-        class="size-8 dark:block hidden" 
-        width="32" 
-        height="32"
-        loading="eager"
-        fetchpriority="high"
-        transition:persist="logo-dark"
-      />
-      <img 
-        src="/static/logod.svg" 
-        alt="Logo" 
-        class="size-8 dark:hidden block" 
-        width="32" 
-        height="32"
-        loading="eager"
-        fetchpriority="high"
-        transition:persist="logo-light"
-      />
-     <!-- <span class="hidden min-[400px]:block">{SITE.title}</span> -->
+<header
+  class="pt-safe sticky top-0 z-30 border-b border-white/40 bg-white/70 backdrop-blur-xl transition dark:border-white/10 dark:bg-slate-900/70"
+  transition:persist
+>
+  <div
+    class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-3"
+  >
+    <Link
+      href="/"
+      class="flex shrink-0 items-center text-2xl font-semibold"
+      aria-label="BlueGreen home"
+    >
+      <span class="runbook-logo flex items-center gap-2">
+        <span aria-hidden="true">✦</span>
+        <span>BlueGreen</span>
+      </span>
     </Link>
     <div class="flex items-center gap-2 md:gap-4">
       <nav class="hidden items-center gap-4 text-sm sm:gap-6 md:flex">
-        {NAV_LINKS.map((item) => {
-          const isExternal = isExternalLink(item.href)
-          const isInsideLink = item.label.toLowerCase() === 'inside'
-          return (
-            <Link 
-              href={item.href} 
-              class={isInsideLink 
-                ? "text-primary hover:text-primary/80 capitalize transition-colors flex items-center gap-1.5 font-medium" 
-                : "text-foreground/60 hover:text-foreground/80 capitalize transition-colors flex items-center gap-1.5"}
-            >
-              <span>{item.label}</span>
-              {isExternal && (
-                <Icon 
-                  name="lucide:external-link" 
-                  class={isInsideLink 
-                    ? "size-3.5 opacity-80 flex-shrink-0 text-primary" 
-                    : "size-3.5 opacity-70 flex-shrink-0"} 
-                  aria-hidden="true"
-                />
-              )}
-            </Link>
-          )
-        })}
+        {
+          NAV_LINKS.map((item) => {
+            const isExternal = isExternalLink(item.href)
+            const isInsideLink = item.label.toLowerCase() === 'inside'
+            return (
+              <Link
+                href={item.href}
+                class={
+                  isInsideLink
+                    ? 'flex items-center gap-1.5 font-semibold text-emerald-600 capitalize transition-colors hover:text-emerald-500'
+                    : 'flex items-center gap-1.5 text-slate-600 capitalize transition-colors hover:text-slate-900'
+                }
+              >
+                <span>{item.label}</span>
+                {isExternal && (
+                  <Icon
+                    name="lucide:external-link"
+                    class={
+                      isInsideLink
+                        ? 'size-3.5 flex-shrink-0 text-emerald-500 opacity-80'
+                        : 'size-3.5 flex-shrink-0 opacity-70'
+                    }
+                    aria-hidden="true"
+                  />
+                )}
+              </Link>
+            )
+          })
+        }
       </nav>
-      <div class="hidden h-6 w-px bg-border/60 md:block" aria-hidden="true"></div>
+      <div
+        class="hidden h-6 w-px bg-white/60 md:block dark:bg-white/15"
+        aria-hidden="true"
+      >
+      </div>
       <SearchButton client:idle />
       <MobileMenu client:idle transition:persist />
       <ThemeToggle transition:persist />

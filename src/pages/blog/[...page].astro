@@ -23,7 +23,7 @@ const postsByYear = groupPostsByYear(page.data)
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
 ---
 
-<Layout class="max-w-3xl">
+<Layout class="max-w-5xl pb-24">
   <PageHead slot="head" title="Blog" />
   <Breadcrumbs
     items={[
@@ -39,9 +39,9 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
           <div class="text-muted-foreground/60 text-xs font-medium uppercase tracking-wider mb-2.5 mt-6 first:mt-0">
             {year}
           </div>
-          <ul class="flex flex-col gap-2">
+          <ul class="flex flex-col gap-3">
             {postsByYear[year].map((post) => (
-              <li>
+              <li class="group/card rounded-2xl border border-white/40 bg-white/80 p-1 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-white/5 dark:bg-slate-900/60 [background:padding-box,linear-gradient(#fff,#fff),border-box_linear-gradient(135deg,transparent,transparent)] hover:[background:padding-box,linear-gradient(#fff,#fff),border-box_linear-gradient(135deg,rgb(16_185_129),rgb(56_189_248),rgb(37_99_235))] dark:[background:padding-box,linear-gradient(rgb(15_23_42/0.6),rgb(15_23_42/0.6)),border-box_linear-gradient(135deg,transparent,transparent)] dark:hover:[background:padding-box,linear-gradient(rgb(15_23_42/0.6),rgb(15_23_42/0.6)),border-box_linear-gradient(135deg,rgb(16_185_129),rgb(56_189_248),rgb(37_99_235))]">
                 <BlogCard entry={post} />
               </li>
             ))}
@@ -51,7 +51,7 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     }
   </div>
 
-  <div class="mt-6">
+  <div class="mt-10">
     <PaginationComponent
       currentPage={page.currentPage}
       totalPages={page.lastPage}
