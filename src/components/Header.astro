@@ -11,21 +11,22 @@ const isExternalLink = (href: string) => {
 ---
 
 <header
-  class="pt-safe sticky top-0 z-30 border-b border-white/40 bg-white/70 backdrop-blur-xl transition dark:border-white/10 dark:bg-slate-900/70"
+  class="pt-safe sticky top-0 z-30 border-b border-white/40 bg-white backdrop-blur-xl transition dark:border-white/10 dark:bg-slate-900"
   transition:persist
 >
   <div
-    class="flex flex-wrap items-center justify-between gap-4 px-4 py-3"
+    class="flex flex-wrap items-center justify-between gap-4 px-6 py-4"
   >
     <Link
       href="/"
-      class="flex shrink-0 items-center text-2xl font-semibold"
+      class="flex shrink-0 items-center text-3xl font-extrabold tracking-tight runbook-logo mx-5 px-2"
       aria-label="BlueGreen home"
     >
       <span class="runbook-logo flex items-center gap-2">
         <span aria-hidden="true">✦</span>
         <span>BlueGreen</span>
       </span>
+      <span class="text-slate-900 dark:text-slate-100" style="-webkit-text-fill-color: currentColor;">&nbsp;/blog</span>
     </Link>
     <div class="flex items-center gap-2 md:gap-4">
       <nav class="hidden items-center gap-4 text-sm sm:gap-6 md:flex">
