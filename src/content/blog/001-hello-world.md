@@ -1,7 +1,7 @@
 ---
 title: "Introducing BlueGreen: Open Beta Release"
 description: "Announcing the Open Beta of BlueGreen: a graph-based CI and workflow orchestrator engine."
-date: 2025-01-25
+date: 2025-12-25
 tags: ["release-notes", "bluegreen", "ci", "devtools", "automation", "workflows"]
 draft: false
 ---
