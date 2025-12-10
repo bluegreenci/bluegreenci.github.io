@@ -1,6 +1,5 @@
 ---
 import Link from '@/components/Link.astro'
-import SearchButton from '@/components/react/SearchButton'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 import MobileMenu from '@/components/ui/mobile-menu'
 import { NAV_LINKS } from '@/consts'
@@ -16,7 +15,7 @@ const isExternalLink = (href: string) => {
   transition:persist
 >
   <div
-    class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-3"
+    class="flex flex-wrap items-center justify-between gap-4 px-4 py-3"
   >
     <Link
       href="/"
@@ -65,7 +64,6 @@ const isExternalLink = (href: string) => {
         aria-hidden="true"
       >
       </div>
-      <SearchButton client:idle />
       <MobileMenu client:idle transition:persist />
       <ThemeToggle transition:persist />
     </div>

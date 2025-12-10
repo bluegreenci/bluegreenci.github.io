@@ -84,28 +84,7 @@ A workflow, simply put: a declarative graph of containerized steps that run exac
 
 ## 💻 “Give Me the Code!”
 
-Let’s start with the simplest possible workflow.
-
-### Minimal Example (copy & paste)
-
-Plain text example:
-
-```yaml
-name: "My First Workflow"
-
-steps:
-- name: "hello"
-  command: echo "Hello from BlueGreen!"
-```
-
-Commit this to your repo → push → run it in the dashboard.
-You’ve just executed your first workflow on BlueGreen.
-
----
-
-### A More Interesting Example
-
-Plain text example:
+Let’s start with a simple workflow definition:
 
 ```yaml
 name: "Getting Started with BlueGreen"
@@ -124,44 +103,21 @@ steps:
     echo $GREETING
 ```
 
+Commit this to your repo in a `runbook.yml` file and push it.
+
+You’ve just started the execution of your first workflow on BlueGreen.
+
+
 ### What’s going on?
 
 - “Hello World” runs first.
-- “Later Gator” waits for it to finish (`depends_onw).
+- “Later Gator” waits for it to finish (`depends_on`).
 - `GREETING` is injected as an environment variable.
 - Steps run in isolated containers.
 - Logs stream live in the UI.
 
----
-
-## 🔧 Step Properties
-
-Each step in runbook.yaml supports:
-
-- `name` — a unique ID for the step
-- `command` — shell commands executed inside its container
-- `depends_on` — steps that must complete before this one
-- `env` (optional) — environment variables for that step
-
-### Global Environment Variables
-
-Plain text example:
-```yaml
-global:
-  env:
-    GREETING: "Hello from BlueGreen!"
-```
-
-Steps can override global variables with their own env block.
-
----
-
-## 📚 Full Workflow Example (click to expand)
-
 <details>
-<summary>Show full example</summary>
-
-Plain text example:
+<summary>Expand: Real World Scenario</summary>
 
 ```yaml
 name: "CI Pipeline"
@@ -187,6 +143,29 @@ steps:
 ```
 
 </details>
+
+
+---
+
+## 🔧 Step Properties
+
+Each step in runbook.yaml supports:
+
+- `name` — a unique ID for the step
+- `command` — shell commands executed inside its container
+- `depends_on` — steps that must complete before this one
+- `env` (optional) — environment variables for that step
+
+### Global Environment Variables
+
+Plain text example:
+```yaml
+global:
+  env:
+    GREETING: "Hello from BlueGreen!"
+```
+
+Steps can override global variables with their own env block.
 
 ---
 
