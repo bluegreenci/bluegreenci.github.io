@@ -290,3 +290,26 @@
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0.75rem);
 }
+
+/* External links styling */
+.markdown-content a[href^="http"] {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(135deg, var(--bluegreen-emerald), var(--bluegreen-azure)) 1;
+  padding-bottom: 1px;
+  position: relative;
+  text-decoration: none;
+}
+
+.markdown-content a[href^="http"]::after {
+  content: '↗';
+  position: absolute;
+  top: -0.25rem;
+  right: -0.75rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.markdown-content a[href^="http"]:hover::after {
+  opacity: 1;
+}
