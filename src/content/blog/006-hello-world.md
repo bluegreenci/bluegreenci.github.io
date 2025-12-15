@@ -27,8 +27,8 @@ Workflows are triggered by GitHub/GitLab webhooks or manually from the dashboard
 
 1. Sign in with GitHub or GitLab at https://bluegreen.ci
 2. Import a project from your account to provision repository webhooks.
-3. Add a `runbook.yml` at the repository root (see the Getting Started guide) or rely on an existing one.
-4. Commit and push to trigger a run — runs are grouped by branch and triggered on new branches, pushes, or merge requests.
+3. Add a `runbook.yml` at the repository root (see [Getting Started](/001-getting-started)) if you don't have one already.
+4. Commit and push to trigger a run; runs are grouped by branch and triggered on new branches, pushes, or merge requests.
 5. Monitor execution and logs in the BlueGreen dashboard.
 
 ## Open Beta infrastructure notes
