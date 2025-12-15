@@ -5,27 +5,39 @@ date: 2025-12-23
 tags: ["teams","projects","permissions","bluegreen"]
 draft: false
 ---
-
 > Create teams, invite members, assign roles, and attach projects for shared ownership and collaborative workflows.
 
-BlueGreen is a multitenant platform. When you create an account, a tenant is created and you become the **tenant owner**. Tenant owners can invite users to the tenant, manage tenant-level settings, and audit activity across the tenant.
+## Overview
 
-To invite users to your tenant, click your avatar in the top-right corner of the dashboard, select **Settings**, then go to the **Team** tab and click on the _**Invite Team Member**_ button.
+BlueGreen is a multi-tenant platform. Creating an account provisions a tenant and assigns the creator as the tenant owner. Tenant owners manage tenant-level settings, invite users, and review audit logs.
+
+## Inviting users
+
+From the dashboard: avatar → **Settings** → **Team** → **Invite Team Member**.
 
 ![](/images/blog/004-teams/invitation.png)
 
-Now, I haven't implemented any email integration yet; you will have to click that button on the user's card, copy the link, and send it to them manually.
+Invitations currently produce a join link that must be delivered to the recipient (email delivery is not integrated). When a recipient opens the link they complete account setup by choosing a password and joining the tenant.
 
-First time they open the link, they will be prompted for a password to complete their account setup and join your tenant.
+## Project access model
 
-By default, tenant members do not have access to projects. Tenant owners or tenant admins must invite members to specific projects and assign them a role before they can view or modify project resources. Go to your projects settings page, and on the _**Access Control**_ then _**Add Users**_:
+Tenant membership does not automatically grant project access. Project access is granted explicitly: tenant owners or tenant admins add members to a project and assign a role before the member can view or modify project resources.
+
+Grant access: Project Settings → Access Control → Add Users
 
 ![](/images/blog/004-teams/project-access.png)
 
-These are the permission levels you can assign:
+## Roles and permissions
 
-- **User**: Minimal access; can view runs and logs. No access to Project Secrets
-- **Manager**: Everything from User, can view Project Secrets
-- **Admin**: Full access to project and its settings
+- **User** — Read-only access to runs and logs. Cannot view or manage Project Secrets.
+- **Manager** — All `User` privileges plus the ability to view Project Secrets.
+- **Admin** — Full project access, including settings, secrets, and access control.
 
-Only tenant owner can import projects from GitHub/GitLab accounts.
+Apply the principle of least privilege: grant only the permissions required for a user’s role.
+
+## Notes and restrictions
+
+- Only the tenant owner can import projects from external Git providers (GitHub/GitLab).
+- Regularly audit tenant and project activity to monitor access and changes.
+
+If useful, I can add an onboarding checklist for new project members or extend this doc with API/CLI examples for programmatic access management.

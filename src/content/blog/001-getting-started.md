@@ -6,21 +6,21 @@ tags: ["getting-started","bluegreen","runbook","tutorial"]
 draft: false
 ---
 
-> Create a `runbook.yml`, push it, and watch BlueGreen execute your steps with live logs and a graph view.
+> Create a `runbook.yml`, push it, and observe BlueGreen execute the workflow with live logs and a graph view.
 
 ## Overview
 
-This guide gets you from zero to a successful run in minutes. You'll create a tiny runbook, push it to your repo, and inspect the run in the BlueGreen dashboard.
+This guide shows how to create, commit, and run a minimal BlueGreen Workflow, to which we'll refer to as a "runbook". Follow the steps to trigger a workflow and inspect its execution in the BlueGreen dashboard.
 
 Prerequisites
 
-- A repo on GitHub/GitLab
-- A BlueGreen account (sign in at https://bluegreen.ci)
-- A BlueGreen project linked to your repo (import it from the dashboard)
+- A repository on GitHub or GitLab
+- A BlueGreen account (https://bluegreen.ci)
+- A BlueGreen project connected to your repository
 
-## Minimal Example
+## Minimal example
 
-Create `runbook.yml` in the repository root:
+Create a `runbook.yml` at the repository root:
 
 ```yaml
 name: "Getting Started with BlueGreen"
@@ -39,23 +39,21 @@ git commit -m "Add initial BlueGreen runbook"
 git push
 ```
 
-Once pushed, BlueGreen will trigger a run.
+Pushing the file will trigger a BlueGreen run for the repository.
 
-## What to expect in the UI
+## Inspecting the run in the dashboard
 
-In the Projects dashboard, click the Workflows button of your project to see the list of runs. Click on the latest run to open the Run Details page, where you'll see your Queued / Running / Succeeded / Failed workflows:
+Open the Projects dashboard and select your project’s Workflows view to see recent runs. Selecting a run opens the Run Details page and displays status (Queued / Running / Succeeded / Failed):
 
 ![](/images/blog/001-getting-started/project-workflows.png)
 
-When selecting your run, you can see your workflow execution details: edges, dependencies:
+The Run Details view shows the execution graph and step dependencies:
 
 ![](/images/blog/001-getting-started/workflow-details.png)
 
-
-When selecting a step, you can see live logs streamed for the step, and stored logs for later inspection:
+Selecting an individual step reveals live-streamed logs and persisted logs for post-mortem analysis:
 
 ![](/images/blog/001-getting-started/step-details.png)
-
 
 ## Extending the example
 
@@ -77,25 +75,23 @@ steps:
     echo $GREETING
 ```
 
-## What Is a Workflow?
+## What is a workflow?
 
-A workflow is a declarative graph of steps that run exactly in the order you define. In BlueGreen, you define a workflow in a file named `runbook.yml` that lives in the root of your repository.
+A workflow is a declarative directed graph of steps defined in `runbook.yml`. Each step is a node and `depends_on` entries form edges. This model expresses ordering and parallelism explicitly.
 
-It describes:
+A runbook describes:
 
-- the steps your workflow will perform
-- the relationships between those steps
-- the commands each step runs
-- the environment variables that shape behavior
-- optional global settings
-
-BlueGreen parses this file and turns it into a directed graph: each step is a graph node, and each `depends_on` creates a directed graph edge. Since BlueGreen workflows are true graphs, parallelism emerges naturally:
+- Steps to execute
+- Inter-step dependencies
+- Commands run for each step
+- Environment variables that affect execution
+- Optional global configuration
 
 ![](/images/blog/hello-world/bluegreen-graph.png)
 
-## Example: A little more detail
+## Example: expanded
 
-Here’s a slightly expanded example showing a dependent step and an environment variable:
+Here is a slightly larger example demonstrating dependencies and environment variables:
 
 ```yaml
 name: "Getting Started with BlueGreen"
@@ -114,16 +110,15 @@ steps:
     echo $GREETING
 ```
 
-_**What’s going on?**_
+Behavior summary
 
-- “Hello World” runs first.
-- “Later Gator” waits for it to finish (`depends_on`).
-- `GREETING` is injected as an environment variable.
-- Steps run in isolated containers.
-- Logs stream live in the UI.
+- `Hello World` executes first.
+- `Later Gator` waits for the `Hello World` step (`depends_on`).
+- `GREETING` is injected as an environment variable for the dependent step.
+- Steps run in isolated containers and stream logs to the UI.
 
 <details>
-<summary>Expand: Real World Scenario</summary>
+<summary>Real-world CI pipeline (example)</summary>
 
 ```yaml
 name: "CI Pipeline"
@@ -150,18 +145,18 @@ steps:
 
 </details>
 
-## Step Properties
+## Step properties
 
-Each step in `runbook.yml` supports the following properties:
+Each step supports the following properties:
 
-| Property    | Type         | Description                                      |
-|-------------|--------------|--------------------------------------------------|
-| `name`      | string       | A unique identifier for the step                  |
-| `command`   | string       | Shell commands to execute inside the container    |
-| `depends_on`| list of strings | Names of steps that must complete before this one |
-| `env`       | key-value pairs | Environment variables for that step (optional) |
+| Property     | Type            | Description                                      |
+|--------------|-----------------|--------------------------------------------------|
+| `name`       | string          | Unique identifier for the step                   |
+| `command`    | string          | Shell commands executed inside the step’s container |
+| `depends_on` | list[string]    | Names of steps that must complete before this one |
+| `env`        | map[string]string | Environment variables for the step (optional)   |
 
-## Global Environment Variables
+## Global environment variables
 
 ```yaml
 global:
@@ -169,4 +164,4 @@ global:
     GREETING: "Hello from BlueGreen!"
 ```
 
-Steps can override global variables with their own env block.
+Step-level `env` entries override global variables.

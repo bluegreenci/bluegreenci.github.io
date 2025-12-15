@@ -5,50 +5,62 @@ date: 2025-12-22
 tags: ["secrets","env","bluegreen"]
 draft: false
 ---
+> Use environments and secrets to secure credentials and control runtime scope.
 
-> Use environments and secrets to protect credentials and control scope for runs.
+## Overview
 
-There are three ways to expose environment variables to a runbook step:
+This document describes how BlueGreen exposes environment variables and secrets to runbook steps, how scoping and injection work, and best practices for secure usage.
 
-1. **Env per step**: use the `env` key on a step to define variables for that step (see [Runbooks: All Workflow Keys & Examples](/002-runbook-keys/)).
+## Mechanisms for providing environment variables
 
-2. **Global Env**: define `global.env` to apply variables to all steps by default (see [Runbooks: All Workflow Keys & Examples](/002-runbook-keys/)).
+1. **Env per step**: declare `env` on a step to set variables scoped to that step.
+2. **Global env**: declare `global.env` to apply variables to all steps by default.
+3. **Platform-injected secrets**: secrets and project-level variables are injected into a step’s environment when the run’s `ENV` (or matching scope) corresponds to the secret’s scope.
 
-3. **Injected with matching `$ENV`**: platform-injected secrets and project-level variables are placed into the step's process environment when they match the step's `$ENV` variable.
+This guide emphasizes the injection model, scoping rules, and security considerations.
 
-This article shows you how these injected variables work: how they're scoped, secured, and injected.
+## Managing environments and secrets (dashboard)
 
-To add an environment and secrets from the dashboard, open your project _**Settings**_ and go to the _**Secrets**_ tab. Add an environment (e.g. `development`):
+Open Project → Settings → Secrets to create environments and add secrets. For example, create an environment named `development` and add secrets scoped to it.
 
 ![](/images/blog/003-secrets/new-env.png)
 
-Then, having selected your environment, click on the _**Add Secret**_ button:
+With an environment selected, click Add Secret to create a secret such as `DB_PASSWORD`.
 
 ![](/images/blog/003-secrets/secret.png)
 
-Now, in order to use the `$DB_PASSWORD` secret in a run, you need to ensure that the run is executed with the `development` environment. You can do this by setting the `ENV` variable in your runbook, either globally or per step:
+## Using secrets in a runbook
+
+Platform-injected secrets are available to steps when the run’s `ENV` matches the secret’s scope. Set `ENV` globally or at the step level to control which environment’s secrets are injected.
+
+Example:
 
 ```yaml
 name: "Using Secrets and Environments"
 
 global:
 	env:
-		ENV: "development" ## Either set globally...
+		ENV: "development" # set globally for the run
 
 steps:
-- name: "Connect to DB"
-	env:
-		ENV: "development" ## ...or per step
-	command: |
-		echo "Connecting to DB with password: $DB_PASSWORD"
-		# TODO: connect properly
+	- name: "Connect to DB"
+		env:
+			ENV: "development" # or set per step
+		command: |
+			# Do not print secrets in production logs
+			echo "Connecting to DB"
+			./app --db-password "$DB_PASSWORD"
 ```
 
-Secrets are encrypted before they are stored and are transmitted securely. There is no limit to how many environments or secrets you can create.
+Notes:
 
+- Platform-injected secrets are stored and transmitted encrypted and are exposed to the step as environment variables at runtime.
+- Avoid printing secrets to logs; pass them directly to programs or use secure libraries that read from the environment.
 
-## Troubleshooting & tips
+## Security and best practices
 
-- If a secret isn't injected, check its scope (project vs environment) and whether the run's environment has access to it
-- Use preview environments for changes that need ephemeral infrastructure
-- Audit secret access and rotations from the dashboard
+- Never commit secrets to source control or embed them in `runbook.yml`.
+- Use environment-scoped secrets (for example, `development`, `staging`, `production`) to reduce blast radius.
+- Prefer step-level `env` for least privilege when only one step requires a secret.
+- Rotate secrets regularly and audit access via the dashboard.
+- For reproducible builds, pin tool versions or use a custom container image rather than embedding credentials.

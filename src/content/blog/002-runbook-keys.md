@@ -5,118 +5,111 @@ date: 2025-12-21
 tags: ["runbook","reference","bluegreen","docs"]
 draft: false
 ---
-
-> This is the complete reference for `runbook.yml`: keys, types, rules, and examples to write reliable, testable workflows.
+> Complete reference for `runbook.yml`: keys, types, examples, and validation guidance.
 
 ## Overview
 
-Runbooks declare a directed graph of steps that BlueGreen executes in containers. Runbooks are YAML files with a small, consistent schema that favors clarity and determinism.
+This document is a concise reference for the BlueGreen runbook schema. A runbook declares a directed graph of steps that BlueGreen executes in containers. The schema is intentionally small and predictable to encourage clarity and testability.
 
-## Runtime Environment
+## Runtime environment
 
-Steps run in an Ubuntu-based Linux container with common tooling preinstalled:
+Steps execute in an Ubuntu-based container image with commonly used tooling. The runtime includes, but is not limited to:
 
-- A `bash` shell, obviousy, with your typical utils like `curl`, `wget`, `tar`, `git`, SQLite3, etc.
-- Node.js `24.11.1`
-- Python `3.14.1`
-- Go `1.25.4`
-- Ruby `3.4.7`
+- `bash` and standard Unix utilities (`curl`, `wget`, `tar`, `git`, `sqlite3`, etc.)
+- Node.js 24.11.1
+- Python 3.14.1
+- Go 1.25.4
+- Ruby 3.4.7
 - Docker and Docker Compose
 
+If your step requires additional system packages, install them at runtime via `apt-get`.
 
-## Key Reference Table
+## Key reference
 
-| `steps[].name` | step | string (required) | Unique identifier for the step within the runbook |
-| `steps[].command` | step | string (required) | Shell commands executed inside the step's container |
-| `steps[].depends_on` | step | list[string] (optional) | Names of steps that must finish before this one runs; forms graph edges |
-| `steps[].env` | step | map[string]string (optional) | Step-scoped environment variables; overrides `global.env` |
+Top-level keys
 
-#### Top-level keys
+| Key     | Type | Description |
+|---------|------|-------------|
+| `name`  | string | Human-friendly workflow name (recommended but optional) |
+| `global`| map    | Global settings applied to all steps (for example, `global.env`) |
+| `steps` | list   | Collection of step objects; the execution graph is defined by `depends_on` entries |
 
-| Key | Type | Meaning |
-|-----|-------|---------|
-| `name` | string | Human-friendly workflow name; recommended but optional |
-| `global` | map | Settings that apply to all steps |
-| `steps` | list | Ordered collection of step objects (the execution graph is formed by `depends_on` links) |
+Step object
 
-#### Step object
+| Key             | Type               | Description |
+|-----------------|--------------------|-------------|
+| `name`          | string (required)  | Unique identifier for the step within the runbook |
+| `command`       | string (required)  | Shell commands executed inside the step's container |
+| `depends_on`    | list[string]       | Names of steps that must complete before this one runs (optional) |
+| `env`           | map[string]string  | Step-scoped environment variables; overrides `global.env` (optional) |
 
-Each step is a map with the following keys:
+Global object
 
-| Key | Type | Meaning |
-|-----|-------|---------|
-| `steps[].name` | string (required) | Unique identifier for the step within the runbook |
-| `steps[].command` | string (required) | Shell commands executed inside the step's container |
-| `steps[].depends_on` | list of strings (optional) | Names of steps that must finish before this one runs; forms graph edges |
-| `steps[].env` | key-value pairs (optional) | Step-scoped environment variables; overrides `global.env` |
-
-#### Global object
-
-| Key | Type | Meaning |
-|-----|-------|---------|
-| `global.env` | key-value pairs (optional) | Environment variables applied to all steps unless overridden |
+| Key          | Type | Description |
+|--------------|------|-------------|
+| `global.env` | map[string]string | Environment variables applied to all steps unless overridden at the step level |
 
 ## Examples
 
-Linear example:
+Linear example
 
 ```yaml
 name: "CI Pipeline"
 
 steps:
-- name: build
-	command: make build
+	- name: build
+		command: make build
 
-- name: test
-	depends_on: [build]
-	command: make test
+	- name: test
+		depends_on: [build]
+		command: make test
 
-- name: publish
-	depends_on: [test]
-	command: make publish
+	- name: publish
+		depends_on: [test]
+		command: make publish
 ```
 
-Parallel example (no dependencies between them):
+Parallel example
 
 ```yaml
 name: "Parallel Checks"
 
 steps:
-- name: lint
-	command: golangci-lint run
+	- name: lint
+		command: golangci-lint run
 
-- name: unit-tests
-	command: go test ./... -v
+	- name: unit-tests
+		command: go test ./... -v
 
-- name: typecheck
-	command: go vet ./...
+	- name: typecheck
+		command: go vet ./...
 ```
 
-Fan-in example (converging to a quality gate):
+Fan-in example (converging on a quality gate)
 
 ```yaml
 name: "Quality Gate"
 
 steps:
-- name: build
-	command: make build
+	- name: build
+		command: make build
 
-- name: lint
-	command: golangci-lint run
+	- name: lint
+		command: golangci-lint run
 
-- name: test
-	depends_on: [build]
-	command: make test
+	- name: test
+		depends_on: [build]
+		command: make test
 
-- name: quality-gate
-	depends_on: [lint, test]
-	command: echo "All checks passed"
+	- name: quality-gate
+		depends_on: [lint, test]
+		command: echo "All checks passed"
 ```
 
-## Validation rules & best practices
+## Validation rules and best practices
 
-- Step names must be unique within a runbook
-- `depends_on` must reference existing step names
-- Keep steps small and focused: shorter, simpler steps are easier to debug and cache
-- Avoid long-running monolithic commands; prefer small scripts or tasks
-- Use `env` for configuration and avoid hardcoding secrets (use Secrets)
+- Step names must be unique within a runbook.
+- `depends_on` entries must reference existing step names; invalid references cause validation errors.
+- Keep steps small and focused: shorter steps are easier to debug and cache.
+- Avoid monolithic, long-running commands; prefer small scripts or task-level commands.
+- Use `env` for non-sensitive configuration; do not hardcode secrets in the runbook—use the platform Secrets feature instead.
