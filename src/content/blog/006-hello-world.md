@@ -41,6 +41,6 @@ These limits are temporary for the Beta and will be relaxed as the platform scal
 
 ## Feedback and contribution
 
-Your feedback is valuable. Report issues, request features, or share suggestions via the project’s issue tracker or support channel.
+Your feedback is valuable. Report issues, request features, or share suggestions directly to me on [LinkedIn](https://www.linkedin.com/in/aziflaj/).
 
 Thank you for trying BlueGreen. Your testing helps shape the platform.
