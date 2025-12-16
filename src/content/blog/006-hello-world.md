@@ -8,8 +8,6 @@ draft: false
 
 Today I'm announcing the Open Beta release of BlueGreen, a Graph-Based Code and Workflow Automation platform.
 
-## Summary
-
 BlueGreen executes declarative workflows defined in `runbook.yml` as directed graphs of steps. Each step runs in an isolated Ubuntu 24.04 container; logs stream live to the dashboard and are persisted for later inspection. The execution order is determined by step dependencies in the runbook.
 
 Included runtime tooling
